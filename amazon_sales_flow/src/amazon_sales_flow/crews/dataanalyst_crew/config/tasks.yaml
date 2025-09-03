@@ -1,0 +1,31 @@
+load_and_clean_data:
+  description: >
+    Load raw data from source, clean missing values, remove duplicates, and standardize data types.
+    Save the cleaned dataset as clean_data.csv.
+  expected_output: >
+    A cleaned dataset saved as clean_data.csv, ready for profiling and analysis.
+  agent: DataEngineerAgent
+
+
+profile_data:
+  description: >
+    Perform data profiling on clean_data.csv using pandas-profiling.
+    Generate eda_report.html and define the dataset schema in dataset_contract.json.
+  expected_output: >
+    A profiling report (eda_report.html) and a dataset schema (dataset_contract.json).
+  agent: DataProfilerAgent
+
+
+generate_business_insights:
+  description: >
+    Analyze clean_data.csv to uncover business trends.
+    Create visualizations for:
+      - Sales by country, year, and month
+      - Number of loss-making transactions per year
+      - Total loss vs. profit per year
+    Summarize insights in insights.md.
+  expected_output: >
+    A markdown file (insights.md) with visualizations and key business insights.
+  agent: BusinessAnalystAgent
+
+
