@@ -64,8 +64,7 @@ class DataanalystCrew():
     def data_profiling(self) -> Task:
         return Task(
             config=self.tasks_config['profile_data'], # type: ignore[index]
-            output_file=["eda_report.html"],
-            output_json="dataset_contract.json"
+            output_file="eda_report.html"
         )
 
     @task
