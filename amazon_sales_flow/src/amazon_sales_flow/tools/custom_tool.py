@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field
 
 import pandas as pd
 import json
-from ydata_profiling import ProfileReport
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.ensemble import RandomForestRegressor
@@ -52,29 +51,45 @@ class CleanDataTool(BaseTool):
             return f"❌ Error: {str(e)}"
 
 # --------------------------------------------------
-# 2. Data Profiling Tool
+# 2. Data Profiling Tool (lightweight HTML EDA without pandas-profiling)
 # --------------------------------------------------
 class ProfileDataToolInput(BaseModel):
     file_path: str = Field(..., description="Path to the cleaned CSV file")
 
 class ProfileDataTool(BaseTool):
     name: str = "profile_data"
-    description: str = "Generates profiling report and dataset schema"
+    description: str = "Generates a lightweight EDA HTML report and dataset schema JSON"
     args_schema: Type[BaseModel] = ProfileDataToolInput
 
     def _run(self, file_path: str) -> str:
         try:
             df = pd.read_csv(file_path)
-            # eda_report.html
-            profile = ProfileReport(df, title="EDA Report", explorative=True)
-            profile.to_file("eda_report.html")
 
-            # dataset_contract.json
+            summary_html = []
+            summary_html.append("<html><head><meta charset='utf-8'><title>EDA Report</title></head><body>")
+            summary_html.append("<h1>EDA Report</h1>")
+            summary_html.append(f"<p><b>Shape:</b> {df.shape}</p>")
+            summary_html.append("<h2>Columns & dtypes</h2>")
+            summary_html.append(df.dtypes.to_frame("dtype").to_html())
+            summary_html.append("<h2>Missing Values</h2>")
+            summary_html.append(df.isna().sum().to_frame("missing_count").to_html())
+            summary_html.append("<h2>Descriptive Statistics (numeric)</h2>")
+            if not df.select_dtypes(include=['number']).empty:
+                summary_html.append(df.describe(include=['number']).to_html())
+            else:
+                summary_html.append("<p>No numeric columns.</p>")
+            summary_html.append("<h2>Sample Rows</h2>")
+            summary_html.append(df.head(20).to_html(index=False))
+            summary_html.append("</body></html>")
+
+            with open("eda_report.html", "w", encoding="utf-8") as f:
+                f.write("\n".join(summary_html))
+
             schema = {
                 "columns": {col: str(df[col].dtype) for col in df.columns},
                 "shape": df.shape
             }
-            with open("dataset_contract.json", "w") as f:
+            with open("dataset_contract.json", "w", encoding="utf-8") as f:
                 json.dump(schema, f, indent=4)
 
             return "eda_report.html, dataset_contract.json"

@@ -15,8 +15,8 @@ class DatascientistCrew():
 
     agents: List[BaseAgent]
     tasks: List[Task]
-    agents_config: str = "amazon_sales_flow/crews/datascientist_crew/config/agents.yaml"
-    tasks_config: str = "amazon_sales_flow/crews/datascientist_crew/config/tasks.yaml"
+    agents_config: str = "config/agents.yaml"
+    tasks_config: str = "config/tasks.yaml"
 
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended

@@ -9,7 +9,7 @@ load_and_clean_data:
 
 profile_data:
   description: >
-    Perform data profiling on clean_data.csv using pandas-profiling.
+    Perform exploratory data analysis (EDA) on clean_data.csv and generate a simple HTML report.
     Generate eda_report.html and define the dataset schema in dataset_contract.json.
   expected_output: >
     A profiling report (eda_report.html) and a dataset schema (dataset_contract.json).

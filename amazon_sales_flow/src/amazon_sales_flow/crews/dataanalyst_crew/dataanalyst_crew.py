@@ -15,8 +15,8 @@ class DataanalystCrew():
 
     agents: List[BaseAgent]
     tasks: List[Task]
-    agents_config: str = "amazon_sales_flow/crews/dataanalyst_crew/config/agents.yaml"
-    tasks_config: str = "amazon_sales_flow/crews/dataanalyst_crew/config/tasks.yaml"
+    agents_config: str = "config/agents.yaml"
+    tasks_config: str = "config/tasks.yaml"
     
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
@@ -64,8 +64,8 @@ class DataanalystCrew():
     def data_profiling(self) -> Task:
         return Task(
             config=self.tasks_config['profile_data'], # type: ignore[index]
-            output_file="eda_report.html",
-            output_file="dataset_contract.json"
+            output_file=["eda_report.html"],
+            output_json="dataset_contract.json"
         )
 
     @task
