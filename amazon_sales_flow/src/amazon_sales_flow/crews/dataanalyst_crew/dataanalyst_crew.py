@@ -2,6 +2,9 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
+from amazon_sales_flow.tools.custom_tool import (
+    CleanDataTool, ProfileDataTool, BusinessInsightsTool
+)
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
@@ -12,7 +15,9 @@ class DataanalystCrew():
 
     agents: List[BaseAgent]
     tasks: List[Task]
-
+    agents_config: str = "amazon_sales_flow/crews/dataanalyst_crew/config/agents.yaml"
+    tasks_config: str = "amazon_sales_flow/crews/dataanalyst_crew/config/tasks.yaml"
+    
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
     # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
@@ -23,6 +28,7 @@ class DataanalystCrew():
     def data_engineer(self) -> Agent:
         return Agent(
             config=self.agents_config['DataEngineerAgent'], # type: ignore[index]
+            tools=[CleanDataTool()],
             verbose=True
         )
 
@@ -30,6 +36,7 @@ class DataanalystCrew():
     def data_profiler(self) -> Agent:
         return Agent(
             config=self.agents_config['DataProfilerAgent'], # type: ignore[index]
+            tools=[ProfileDataTool()],
             verbose=True
         )
     
@@ -37,6 +44,7 @@ class DataanalystCrew():
     def business_analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['BusinessAnalystAgent'], # type: ignore[index]
+            tools=[BusinessInsightsTool()],
             verbose=True
         )
 
@@ -80,5 +88,6 @@ class DataanalystCrew():
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
+            memory=True,
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )

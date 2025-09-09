@@ -4,7 +4,7 @@ load_and_clean_data:
     Save the cleaned dataset as clean_data.csv.
   expected_output: >
     A cleaned dataset saved as clean_data.csv, ready for profiling and analysis.
-  agent: DataEngineerAgent
+  agent: data_engineer
 
 
 profile_data:
@@ -13,7 +13,7 @@ profile_data:
     Generate eda_report.html and define the dataset schema in dataset_contract.json.
   expected_output: >
     A profiling report (eda_report.html) and a dataset schema (dataset_contract.json).
-  agent: DataProfilerAgent
+  agent: data_profiler
 
 
 generate_business_insights:
@@ -26,6 +26,6 @@ generate_business_insights:
     Summarize insights in insights.md.
   expected_output: >
     A markdown file (insights.md) with visualizations and key business insights.
-  agent: BusinessAnalystAgent
+  agent: business_analyst
 
 

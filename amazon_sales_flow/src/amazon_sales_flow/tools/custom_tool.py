@@ -6,9 +6,11 @@ from pydantic import BaseModel, Field
 import pandas as pd
 import json
 from ydata_profiling import ProfileReport
-import matplotlib.pyplot as 
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.dummy import DummyRegressor
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import pickle
 
 
@@ -18,25 +20,32 @@ import pickle
 # 1. Data Cleaning Tool
 # --------------------------------------------------
 class CleanDataToolInput(BaseModel):
-    file_path: str = Field(..., description="Path to the raw CSV file")
+    file_path: str = Field(..., description="Path to the raw CSV or Excel file")
 
 class CleanDataTool(BaseTool):
     name: str = "clean_data"
-    description: str = "Cleans raw data and outputs clean_data.csv"
+    description: str = "Cleans raw data (CSV/XLSX), handles missing values/types, outputs clean_data.csv"
     args_schema: Type[BaseModel] = CleanDataToolInput
 
     def _run(self, file_path: str) -> str:
         try:
-            df = pd.read_csv(file_path)
+            if file_path.lower().endswith((".xlsx", ".xls")):
+                df = pd.read_excel(file_path)
+            else:
+                df = pd.read_csv(file_path)
+
             df = df.drop_duplicates()
-            for col in df.columns:
-                if df[col].dtype in ['float64', 'int64']:
-                    df[col] = df[col].fillna(0)
+
+            for column_name in df.columns:
+                if df[column_name].dtype in ["float64", "int64"]:
+                    df[column_name] = df[column_name].fillna(0)
                 else:
-                    df[col] = df[col].fillna('Unknown')
-            for col in df.columns:
-                if "date" in col.lower():
-                    df[col] = pd.to_datetime(df[col], errors="coerce")
+                    df[column_name] = df[column_name].fillna("Unknown")
+
+            for column_name in df.columns:
+                if "date" in column_name.lower():
+                    df[column_name] = pd.to_datetime(df[column_name], errors="coerce")
+
             df.to_csv("clean_data.csv", index=False)
             return "clean_data.csv"
         except Exception as e:

@@ -1,17 +1,33 @@
-research_task:
+feature_engineering_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Perform feature engineering on the cleaned dataset (clean_data.csv).
+    Create new features like profit margins, price per unit, and categorical encodings.
+    Save the enhanced dataset as features.csv.
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    An enhanced dataset (features.csv) with engineered features ready for machine learning.
+  agent: FeatureEngineerAgent
 
-reporting_task:
+model_training_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Train a machine learning model using the engineered features (features.csv).
+    Use appropriate algorithms for profit prediction.
+    Save the trained model as trained_model.pkl.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    A trained machine learning model saved as trained_model.pkl.
+  agent: ModelTrainerAgent
+
+evaluation_task:
+  description: >
+    Evaluate the trained model's performance using cross-validation and test metrics.
+    Generate a comprehensive evaluation report (evaluation_report.md).
+  expected_output: >
+    A detailed evaluation report (evaluation_report.md) with performance metrics and analysis.
+  agent: ModelEvaluatorAgent
+
+model_card_task:
+  description: >
+    Create a comprehensive model card documenting the model's purpose, performance, and limitations.
+    Generate model_card.md for model documentation and governance.
+  expected_output: >
+    A complete model card (model_card.md) with model documentation and ethical considerations.
+  agent: ModelCardAgent

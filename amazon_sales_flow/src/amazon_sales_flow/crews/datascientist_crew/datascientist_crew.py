@@ -2,6 +2,9 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
+from amazon_sales_flow.tools.custom_tool import (
+    FeatureEngineeringTool, ModelTrainingTool, ModelEvaluationTool, ModelCardTool
+)
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
@@ -12,6 +15,8 @@ class DatascientistCrew():
 
     agents: List[BaseAgent]
     tasks: List[Task]
+    agents_config: str = "amazon_sales_flow/crews/datascientist_crew/config/agents.yaml"
+    tasks_config: str = "amazon_sales_flow/crews/datascientist_crew/config/tasks.yaml"
 
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
@@ -25,6 +30,7 @@ class DatascientistCrew():
     def feature_engineer(self) -> Agent:
         return Agent(
             config=self.agents_config['FeatureEngineerAgent'],
+            tools=[FeatureEngineeringTool()],
             verbose=True
         )
 
@@ -32,6 +38,7 @@ class DatascientistCrew():
     def model_trainer(self) -> Agent:
         return Agent(
             config=self.agents_config['ModelTrainerAgent'],
+            tools=[ModelTrainingTool()],
             verbose=True
         )
 
@@ -39,6 +46,7 @@ class DatascientistCrew():
     def model_evaluator(self) -> Agent:
         return Agent(
             config=self.agents_config['ModelEvaluatorAgent'],
+            tools=[ModelEvaluationTool()],
             verbose=True
         )
 
@@ -46,6 +54,7 @@ class DatascientistCrew():
     def model_card_agent(self) -> Agent:
         return Agent(
             config=self.agents_config['ModelCardAgent'],
+            tools=[ModelCardTool()],
             verbose=True
         )
 
@@ -92,5 +101,6 @@ class DatascientistCrew():
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
+            memory=True,
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )
