@@ -31,7 +31,7 @@ class DatascientistCrew():
         return Agent(
             config=self.agents_config['FeatureEngineerAgent'],
             tools=[FeatureEngineeringTool()],
-            verbose=True
+            verbose=true
         )
 
     @agent

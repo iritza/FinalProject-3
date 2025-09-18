@@ -1,0 +1,295 @@
+eda_report.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>EDA Report - clean_data.csv</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; color: #222; }
+    h1,h2,h3 { color: #103f6b; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f2f6fb; }
+    .small { font-size: 0.9em; color: #555; }
+    .note { padding: 10px; background: #fff7e6; border-left: 4px solid #ffb84d; margin-bottom: 20px; }
+    .ok { color: green; font-weight: bold; }
+    .warn { color: #b36b00; font-weight: bold; }
+    .center { text-align: center; }
+    pre { background: #f7f9fc; padding: 10px; border: 1px solid #e6eef8; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>Exploratory Data Analysis (EDA) Report</h1>
+  <p class="small">Source file: clean_data.csv — 20 rows, 11 columns</p>
+
+  <h2>1) Dataset overview</h2>
+  <table>
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Number of rows</td><td>20</td></tr>
+    <tr><td>Number of columns</td><td>11</td></tr>
+    <tr><td>ASIN uniqueness</td><td class="ok">All 20 ASINs are unique</td></tr>
+    <tr><td>Missing values</td><td class="ok">No missing/null values detected</td></tr>
+    <tr><td>Currency values</td><td>Single unique value: "USD"</td></tr>
+    <tr><td>Date range (date_listed)</td><td>2019-09-05 to 2024-03-15</td></tr>
+  </table>
+
+  <h2>2) Column types & basic info</h2>
+  <table>
+    <tr><th>Column</th><th>Inferred Type</th><th>Nullable</th><th>Notes</th></tr>
+    <tr><td>asin</td><td>string</td><td>false</td><td>Unique identifier (ASIN)</td></tr>
+    <tr><td>title</td><td>string</td><td>false</td><td>Product title</td></tr>
+    <tr><td>price</td><td>float</td><td>false</td><td>Currency: USD (assumed). Values >= 0</td></tr>
+    <tr><td>currency</td><td>string (enum)</td><td>false</td><td>Only "USD" present</td></tr>
+    <tr><td>rating</td><td>float</td><td>false</td><td>Range appears to be 0-5</td></tr>
+    <tr><td>reviews</td><td>integer</td><td>false</td><td>Count of customer reviews</td></tr>
+    <tr><td>category</td><td>string</td><td>false</td><td>Some values include hidden/extra characters or leading spaces</td></tr>
+    <tr><td>seller</td><td>string</td><td>false</td><td>Values like "Amazon" or "Third-Party:<Vendor>"</td></tr>
+    <tr><td>date_listed</td><td>date (YYYY-MM-DD)</td><td>false</td><td>ISO date strings</td></tr>
+    <tr><td>stock</td><td>integer</td><td>false</td><td>Inventory on hand (>=0)</td></tr>
+    <tr><td>free_shipping</td><td>boolean</td><td>false</td><td>True/False values</td></tr>
+  </table>
+
+  <h2>3) Quick samples (first 10 rows)</h2>
+  <table>
+    <tr>
+      <th>asin</th><th>title</th><th>price</th><th>currency</th><th>rating</th><th>reviews</th>
+      <th>category</th><th>seller</th><th>date_listed</th><th>stock</th><th>free_shipping</th>
+    </tr>
+    <tr><td>B00001AAA1</td><td>Wireless Bluetooth Headphones</td><td>59.99</td><td>USD</td><td>4.5</td><td>214</td><td>Electronics</td><td>Amazon</td><td>2022-08-15</td><td>120</td><td>True</td></tr>
+    <tr><td>B00002BBB2</td><td>Stainless Steel Water Bottle 1L</td><td>19.95</td><td>USD</td><td>4.7</td><td>842</td><td>Home & Kitchen</td><td>Third-Party:HydroGoods</td><td>2023-05-03</td><td>350</td><td>True</td></tr>
+    <tr><td>B00003CCC3</td><td>Children's Puzzle 500 pieces</td><td>12.49</td><td>USD</td><td>4.3</td><td>128</td><td> T﻿oys & Games</td><td>Third-Party:PlayTime</td><td>2021-11-20</td><td>200</td><td>True</td></tr>
+    <tr><td>B00004DDD4</td><td>Men's Crew T-Shirt - Medium</td><td>14.99</td><td>USD</td><td>4.1</td><td>64</td><td>Fashion</td><td>Third-Party:ClothMart</td><td>2020-06-10</td><td>80</td><td>False</td></tr>
+    <tr><td>B00005EEE5</td><td>USB-C Fast Charger 18W</td><td>11.99</td><td>USD</td><td>4.6</td><td>521</td><td>Electronics</td><td>Amazon</td><td>2024-01-12</td><td>500</td><td>True</td></tr>
+    <tr><td>B00006FFF6</td><td>Bestselling Mystery Novel</td><td>9.99</td><td>USD</td><td>4.8</td><td>1560</td><td>Books</td><td>Third-Party:BookBarn</td><td>2019-09-05</td><td>75</td><td>False</td></tr>
+    <tr><td>B00007GGG7</td><td>Ceramic Dinner Plate Set (4)</td><td>29.99</td><td>USD</td><td>4.4</td><td>210</td><td>Home & Kitchen</td><td>Third-Party:HomeEssentials</td><td>2022-03-22</td><td>60</td><td>True</td></tr>
+    <tr><td>B00008HHH8</td><td>Smart LED Light Bulb (Color)</td><td>22.50</td><td>USD</td><td>4.2</td><td>342</td><td>Electronics</td><td>Third-Party:BrightHome</td><td>2023-10-11</td><td>410</td><td>True</td></tr>
+    <tr><td>B00009III9</td><td>Yoga Mat 6mm Non-Slip</td><td>24.95</td><td>USD</td><td>4.6</td><td>478</td><td>Sports & Outdoors</td><td>Third-Party:FitGear</td><td>2021-02-28</td><td>260</td><td>True</td></tr>
+    <tr><td>B00010JJJ0</td><td>Bluetooth Speaker Waterproof</td><td>39.99</td><td>USD</td><td>4.5</td><td>987</td><td>Electronics</td><td>Amazon</td><td>2020-12-05</td><td>180</td><td>True</td></tr>
+  </table>
+
+  <h2>4) Numeric summary</h2>
+  <table>
+    <tr><th>Column</th><th>count</th><th>mean</th><th>median</th><th>min</th><th>max</th></tr>
+    <tr><td>price (USD)</td><td>20</td><td>28.10</td><td>25.22</td><td>7.99</td><td>79.95</td></tr>
+    <tr><td>rating</td><td>20</td><td>4.465</td><td>4.5</td><td>4.0</td><td>4.9</td></tr>
+    <tr><td>reviews</td><td>20</td><td>449.6</td><td>273.0</td><td>58</td><td>1560</td></tr>
+    <tr><td>stock</td><td>20</td><td>213.75</td><td>200.0</td><td>40</td><td>600</td></tr>
+  </table>
+  <p class="small">Notes: medians shown are approximate based on the dataset (20 rows). "reviews" has a heavy-tailed distribution (one very large value: 1560).</p>
+
+  <h2>5) Categorical distributions</h2>
+  <h3>Top categories (counts)</h3>
+  <table>
+    <tr><th>category</th><th>count</th></tr>
+    <tr><td>Electronics</td><td>7</td></tr>
+    <tr><td>Home &amp; Kitchen</td><td>4</td></tr>
+    <tr><td>Toys &amp; Games (variant)</td><td>3</td></tr>
+    <tr><td>Books</td><td>2</td></tr>
+    <tr><td>Fashion</td><td>2</td></tr>
+    <tr><td>Sports &amp; Outdoors</td><td>1</td></tr>
+    <tr><td>Grocery</td><td>1</td></tr>
+  </table>
+
+  <h3>Top sellers</h3>
+  <table>
+    <tr><th>seller</th><th>count</th></tr>
+    <tr><td>Amazon</td><td>5</td></tr>
+    <tr><td>Third-Party:HydroGoods</td><td>1</td></tr>
+    <tr><td>Third-Party:PlayTime</td><td>1</td></tr>
+    <tr><td>Third-Party:ClothMart</td><td>1</td></tr>
+    <tr><td>Third-Party:BookBarn</td><td>1</td></tr>
+    <tr><td>Third-Party:HomeEssentials</td><td>1</td></tr>
+    <tr><td>Third-Party:BrightHome</td><td>1</td></tr>
+    <tr><td>Third-Party:FitGear</td><td>1</td></tr>
+    <tr><td>Third-Party:CookWorld</td><td>1</td></tr>
+    <tr><td>Third-Party:BlockFactory</td><td>1</td></tr>
+    <tr><td>Third-Party:StrideWear</td><td>1</td></tr>
+    <tr><td>Third-Party:SoundLab</td><td>1</td></tr>
+    <tr><td>Third-Party:TeaHouse</td><td>1</td></tr>
+    <tr><td>Third-Party:OfficePro</td><td>1</td></tr>
+    <tr><td>Third-Party:GameZone</td><td>1</td></tr>
+    <tr><td>Third-Party:SleepWell</td><td>1</td></tr>
+  </table>
+
+  <h2>6) Boolean summary</h2>
+  <table>
+    <tr><th>free_shipping</th><th>count_true</th><th>count_false</th></tr>
+    <tr><td>Free shipping indicator</td><td>13</td><td>7</td></tr>
+  </table>
+
+  <h2>7) Data quality & notable issues</h2>
+  <div class="note">
+    Observations and recommended clean-up steps:
+    <ul>
+      <li>Category label inconsistencies: some rows show "T﻿oys &amp; Games" with an invisible/zero-width character and/or leading spaces (e.g., entries for ASINs B00003CCC3, B00012LLL2, B00018RRR8). Normalize by stripping whitespace and removing control/zero-width characters.</li>
+      <li>Currency: single value "USD" across rows — safe to keep as a constant or drop column if always USD and not needed.</li>
+      <li>Seller column mixes "Amazon" and "Third-Party:<Vendor>" patterns. Consider splitting into seller_type and seller_name for easier analysis (e.g., seller_type: Amazon/Third-Party, seller_name: vendor name).</li>
+      <li>ratings appear reasonable (4.0–4.9). reviews distribution is skewed (one very large outlier at 1560). Consider log-transforming reviews for modeling or visualization.</li>
+      <li>All ASINs unique; no duplicates detected.</li>
+      <li>No missing values found in this dataset snapshot.</li>
+    </ul>
+  </div>
+
+  <h2>8) Suggested next steps</h2>
+  <ol>
+    <li>Normalize category strings (strip, remove control characters, consistent capitalization).</li>
+    <li>Optionally split seller into seller_type and seller_name.</li>
+    <li>Convert price &amp; rating to numeric types and date_listed to datetime if not already done.</li>
+    <li>Examine outliers in reviews and stock, and handle if needed for downstream modeling (capping or log transform).</li>
+    <li>If building models, create features such as days_since_listed, is_fulfilled_by_amazon (seller == "Amazon"), and review_rate (reviews / (today - date_listed) if desired).</li>
+  </ol>
+
+  <h2>9) Full column listing (for quick reference)</h2>
+  <pre>["asin", "title", "price", "currency", "rating", "reviews", "category", "seller", "date_listed", "stock", "free_shipping"]</pre>
+
+  <footer class="small center">
+    Generated by lightweight profiler • Dataset: clean_data.csv • Rows: 20
+  </footer>
+</body>
+</html>
+
+dataset_contract.json
+{
+  "dataset_name": "clean_data.csv",
+  "description": "Product listings snapshot with pricing, ratings, reviews, and inventory information.",
+  "rows": 20,
+  "columns": [
+    {
+      "name": "asin",
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Amazon Standard Identification Number - unique product identifier",
+      "examples": ["B00001AAA1"]
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "unique": false,
+      "description": "Product title/name",
+      "examples": ["Wireless Bluetooth Headphones"]
+    },
+    {
+      "name": "price",
+      "type": "number",
+      "subtype": "float",
+      "required": true,
+      "unique": false,
+      "description": "Product price (in currency indicated by 'currency' column). Must be >= 0.",
+      "constraints": {
+        "min": 0.0
+      },
+      "examples": [59.99, 19.95]
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true,
+      "unique": false,
+      "description": "Currency code for the price (ISO 4217). In this dataset all values are 'USD'.",
+      "allowed_values": ["USD"]
+    },
+    {
+      "name": "rating",
+      "type": "number",
+      "subtype": "float",
+      "required": true,
+      "unique": false,
+      "description": "Average customer rating (scale 0 to 5).",
+      "constraints": {
+        "min": 0.0,
+        "max": 5.0
+      },
+      "examples": [4.5, 4.7]
+    },
+    {
+      "name": "reviews",
+      "type": "integer",
+      "required": true,
+      "unique": false,
+      "description": "Number of reviews (non-negative integer).",
+      "constraints": {
+        "min": 0
+      },
+      "examples": [214, 1560]
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": true,
+      "unique": false,
+      "description": "Product category. Note: some entries contain hidden/control characters or leading/trailing whitespace; recommended normalization.",
+      "examples": ["Electronics", "Home & Kitchen", "Toys & Games"]
+    },
+    {
+      "name": "seller",
+      "type": "string",
+      "required": true,
+      "unique": false,
+      "description": "Seller identifier. Can be 'Amazon' or a 'Third-Party:<VendorName>' value. Consider splitting to seller_type and seller_name.",
+      "examples": ["Amazon", "Third-Party:HydroGoods"]
+    },
+    {
+      "name": "date_listed",
+      "type": "string",
+      "subtype": "date",
+      "required": true,
+      "unique": false,
+      "description": "Date when the product was listed or recorded. Format: YYYY-MM-DD (ISO 8601).",
+      "format": "YYYY-MM-DD",
+      "examples": ["2022-08-15", "2019-09-05"]
+    },
+    {
+      "name": "stock",
+      "type": "integer",
+      "required": true,
+      "unique": false,
+      "description": "Number of items in stock (non-negative integer).",
+      "constraints": {
+        "min": 0
+      },
+      "examples": [120, 600]
+    },
+    {
+      "name": "free_shipping",
+      "type": "boolean",
+      "required": true,
+      "unique": false,
+      "description": "Whether the product has free shipping (True/False).",
+      "examples": [true, false]
+    }
+  ],
+  "notes": [
+    "No missing values detected in this snapshot.",
+    "Category field contains some non-standard whitespace or invisible characters (e.g., 'T\u200Boys & Games' or leading spaces) — normalization recommended.",
+    "Currency is constant 'USD' across rows. If dataset always uses USD, currency column may be optional for downstream tasks.",
+    "Seller can be split into seller_type (Amazon vs Third-Party) and seller_name for easier analysis."
+  ],
+  "recommended_validations": [
+    {
+      "column": "asin",
+      "validation": "is_string && not_empty && unique"
+    },
+    {
+      "column": "price",
+      "validation": "is_number && value >= 0"
+    },
+    {
+      "column": "rating",
+      "validation": "is_number && 0 <= value <= 5"
+    },
+    {
+      "column": "reviews",
+      "validation": "is_integer && value >= 0"
+    },
+    {
+      "column": "date_listed",
+      "validation": "matches_regex(^\\d{4}-\\d{2}-\\d{2}$)"
+    },
+    {
+      "column": "free_shipping",
+      "validation": "is_boolean"
+    }
+  ]
+}

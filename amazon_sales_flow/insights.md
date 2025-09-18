@@ -1,0 +1,1 @@
+(Full content of insights.md reproduced above)

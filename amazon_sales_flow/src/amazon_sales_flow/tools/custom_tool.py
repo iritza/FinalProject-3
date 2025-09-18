@@ -28,22 +28,43 @@ class CleanDataTool(BaseTool):
 
     def _run(self, file_path: str) -> str:
         try:
+            # Read input
             if file_path.lower().endswith((".xlsx", ".xls")):
-                df = pd.read_excel(file_path)
+                # Load all sheets and pick the sheet with the most non-empty rows
+                sheets = pd.read_excel(file_path, sheet_name=None)
+                if not isinstance(sheets, dict) or len(sheets) == 0:
+                    return "❌ Error: No sheets found in Excel file"
+                max_rows = -1
+                selected_df = None
+                for sheet_name, sheet_df in sheets.items():
+                    candidate = sheet_df.dropna(how='all')
+                    if len(candidate) > max_rows:
+                        max_rows = len(candidate)
+                        selected_df = candidate
+                df = selected_df if selected_df is not None else list(sheets.values())[0]
             else:
-                df = pd.read_csv(file_path)
+                df = pd.rea_dcsv(file_path)
 
+            # Basic cleaning
+            df = df.dropna(how='all')
             df = df.drop_duplicates()
 
+            # Fill missing values by dtype
             for column_name in df.columns:
                 if df[column_name].dtype in ["float64", "int64"]:
                     df[column_name] = df[column_name].fillna(0)
                 else:
                     df[column_name] = df[column_name].fillna("Unknown")
 
+            # Parse date-like columns
             for column_name in df.columns:
                 if "date" in column_name.lower():
                     df[column_name] = pd.to_datetime(df[column_name], errors="coerce")
+
+            # Preserve postal/zip codes as strings if present
+            for postal_col in ["PostalCode", "Zip", "ZipCode"]:
+                if postal_col in df.columns:
+                    df[postal_col] = df[postal_col].astype(str)
 
             df.to_csv("clean_data.csv", index=False)
             return "clean_data.csv"

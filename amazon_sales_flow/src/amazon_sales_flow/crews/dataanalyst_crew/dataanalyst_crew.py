@@ -57,7 +57,8 @@ class DataanalystCrew():
     def data_cleaning(self) -> Task:
         return Task(
             config=self.tasks_config['load_and_clean_data'], # type: ignore[index]
-            output_file="clean_data.csv"
+            tools=[CleanDataTool()],
+            # output_file="clean_data.csv"
         )
 
     @task
@@ -87,6 +88,5 @@ class DataanalystCrew():
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
-            memory=True,
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )

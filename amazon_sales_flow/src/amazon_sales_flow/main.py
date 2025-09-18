@@ -28,28 +28,28 @@ class AmazonSalesFlow(Flow[AmazonSalesState]):
         self.state.data_profiled = True
         self.state.business_insights_generated = True
 
-    @listen(data_analysis_phase)
-    def data_science_phase(self):
-        print("Starting Amazon Sales Data Science Phase...")
-        result = DatascientistCrew().crew().kickoff()
-        print("Data Science Phase completed:", result.raw)
-        self.state.features_engineered = True
-        self.state.model_trained = True
-        self.state.model_evaluated = True
-        self.state.model_card_generated = True
+    # @listen(data_analysis_phase)
+    # def data_science_phase(self):
+    #     print("Starting Amazon Sales Data Science Phase...")
+    #     result = DatascientistCrew().crew().kickoff()
+    #     print("Data Science Phase completed:", result.raw)
+    #     self.state.features_engineered = True
+    #     self.state.model_trained = True
+    #     self.state.model_evaluated = True
+    #     self.state.model_card_generated = True
 
-    @listen(data_science_phase)
-    def finalize_analysis(self):
-        print("Amazon Sales Analysis Complete!")
-        print("Generated files:")
-        print("- clean_data.csv")
-        print("- eda_report.html")
-        print("- dataset_contract.json")
-        print("- insights.md")
-        print("- features.csv")
-        print("- trained_model.pkl")
-        print("- evaluation_report.md")
-        print("- model_card.md")
+    # @listen(data_science_phase)
+    # def finalize_analysis(self):
+    #     print("Amazon Sales Analysis Complete!")
+    #     print("Generated files:")
+    #     print("- clean_data.csv")
+    #     print("- eda_report.html")
+    #     print("- dataset_contract.json")
+    #     print("- insights.md")
+    #     print("- features.csv")
+    #     print("- trained_model.pkl")
+    #     print("- evaluation_report.md")
+    #     print("- model_card.md")
 
 
 def kickoff():

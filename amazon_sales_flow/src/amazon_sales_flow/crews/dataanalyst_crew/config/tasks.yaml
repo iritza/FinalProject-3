@@ -1,10 +1,11 @@
 load_and_clean_data:
-  description: >
-    Load raw data from source, clean missing values, remove duplicates, and standardize data types.
-    Save the cleaned dataset as clean_data.csv.
-  expected_output: >
-    A cleaned dataset saved as clean_data.csv, ready for profiling and analysis.
-  agent: data_engineer
+   description: >
+     use the file Amazon 2_Raw.xlsx from path data/Amazon 2_Raw.xlsx and clean it using the CleanDataTool
+     Load raw data from source, clean missing values, remove duplicates, and standardize data types.
+     Save all the cleaned dataset as clean_data.csv.
+   expected_output: >
+     A cleaned dataset saved as clean_data.csv, ready for profiling and analysis.
+   agent: data_engineer
 
 
 profile_data:

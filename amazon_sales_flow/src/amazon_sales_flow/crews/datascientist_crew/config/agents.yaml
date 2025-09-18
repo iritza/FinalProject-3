@@ -7,10 +7,6 @@ FeatureEngineerAgent:
     A skilled data scientist specializing in feature engineering and data transformation.
     Expert in creating derived features, handling categorical variables, and preparing data for machine learning.
     Focuses on creating features that capture business logic and improve predictive power.
-  allow_delegation: false
-  verbose: true
-  tools:
-    - feature_engineering
 
 ModelTrainerAgent:
   role: >
@@ -21,10 +17,6 @@ ModelTrainerAgent:
     An experienced ML engineer with expertise in various algorithms and model optimization.
     Specializes in regression models, ensemble methods, and hyperparameter tuning.
     Committed to building robust and accurate predictive models.
-  allow_delegation: false
-  verbose: true
-  tools:
-    - train_model
 
 ModelEvaluatorAgent:
   role: >
@@ -35,10 +27,6 @@ ModelEvaluatorAgent:
     A meticulous data scientist focused on model validation and performance assessment.
     Expert in cross-validation, metrics interpretation, and model comparison.
     Ensures models meet business requirements and perform reliably in production.
-  allow_delegation: false
-  verbose: true
-  tools:
-    - evaluate_model
 
 ModelCardAgent:
   role: >
@@ -49,7 +37,4 @@ ModelCardAgent:
     A technical writer and ML engineer specializing in model documentation and governance.
     Expert in creating model cards, documenting limitations, and ensuring ethical AI practices.
     Committed to transparency and responsible AI deployment.
-  allow_delegation: false
-  verbose: true
-  tools:
-    - generate_model_card
+
